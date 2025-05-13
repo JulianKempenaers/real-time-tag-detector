@@ -13,7 +13,7 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 -->
 
  ## Compatibility Notes
-- Installer currently tested on **Raspberry Pi OS** (Linux terminal).
+- Installer(run_installer.sh) currently tested on **Raspberry Pi OS** (Linux terminal).
 - Built in **Python**
 - Works with **Picam2** camera system
 - Uses the **STag** library by **Manfred Stoiber** for marker detection
@@ -21,5 +21,5 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 ---
 ## License
 
-This project is licensed under the [MIT License](LICENSE). 
-Includes components from the 'stag-python' library (MIT-licensed).
+- This project is licensed under the [MIT License](LICENSE). 
+- Includes components from the 'stag-python' library (MIT-licensed).
