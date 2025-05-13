@@ -1,0 +1,7 @@
+numpy
+opencv-python
+picamera2
+stag-python
+scikit-image
+scipy
+matplotlib

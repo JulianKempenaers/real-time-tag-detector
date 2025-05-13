@@ -1,0 +1,15 @@
+#first time installation:
+#-----
+#1. add the live_qr_scanner_folder folder to your desktop or documents folder (not on external drive)
+
+#2. find the 'run_installer.sh' file. double click and select 'execute in terminal'
+#this will not work if you are not connected to the internet
+
+
+#using code after installation:
+#-------------------------------
+#1.locate 'run_stag.sh' in the live_qr_scanner_folder
+
+#2. double click it and press 'execute in terminal'
+
+#3. hit 'Esc' to close the live detector
