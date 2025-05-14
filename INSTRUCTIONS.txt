@@ -1,5 +1,5 @@
 #first time installation:
-#-----
+#------------------------
 #1. add the live_qr_scanner_folder folder to your desktop or documents folder (not on external drive)
 
 #2. find the 'run_installer.sh' file. double click and select 'execute in terminal'
@@ -8,8 +8,42 @@
 
 #using code after installation:
 #-------------------------------
-#1.locate 'run_stag.sh' in the live_qr_scanner_folder
+#1. Decide whether you want to use RecentId Colour Coding (RICC) or not (nRICC). 
 
-#2. double click it and press 'execute in terminal'
+#2. Optionally open the code to edit some modifiable variables (see more details on modifiable variables below)
 
-#3. hit 'Esc' to close the live detector
+#3.locate 'run_stag_with_RecentIdColourCoding.sh' or 'run_stag_without_RecentIdColourCoding.sh' file in the live_qr_scanner_folder
+
+#4. double click it and press 'execute in terminal'
+
+#5. hit 'Esc' to close the live detector
+
+
+#Modifiable variables:
+#----------------------
+#n_cols:
+This code keeps track of the n most recently detected tags and colour codes them. 
+This means that even if they move out of frame for a few seconds, they will still 
+have the same colour when they return. n_cols enables changing how many other tags
+can be detected before this one is forgotten.
+
+#stag_libraries:
+Various libraries of STags exist. Here you must specify which STags you're using 
+so that the code can detect them.
+
+
+#display_height and display_width:
+This applies to the size of the output screen.
+
+#normalise_view (True or False)
+Normalising view can improve contrast within the image, including contrast of tags.
+However sometimes it can increase false detection rates. 
+
+#WIDTH and HEIGHT
+These determine the resolution of the captured images. 
+If STags take up a small part of your image, you may want to capture in higher resolution.
+
+#SHUTTERUS and GAIN
+These are picamera2 specific settings for exposure and gain of the captured image
+
+

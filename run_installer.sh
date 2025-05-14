@@ -61,12 +61,12 @@ fi
 
 
 #generate a run_stag.sh file
-RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag.sh"
+RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_with_RecentIdColourCoding.sh"
 cat <<EOF > "$RUN_SCRIPT"
 #!/bin/bash
 cd "$LIVE_QR_SCANNER_DIR"
 source live_qr_scanner/bin/activate
-python live_qr_scanner.py
+python live_stag_scanner_RICC.py
 EOF
 
 chmod +x "$RUN_SCRIPT" #make it executable
@@ -75,7 +75,24 @@ echo "Created launcher script at $RUN_SCRIPT"
 echo "You can now run the program anytime with:"
 echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
 
+
+#generate a run_stag.sh file
+RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_without_RecentIdColourCoding.sh"
+cat <<EOF > "$RUN_SCRIPT"
+#!/bin/bash
+cd "$LIVE_QR_SCANNER_DIR"
+source live_qr_scanner/bin/activate
+python live_stag_scanner_nRICC.py
+EOF
+
+chmod +x "$RUN_SCRIPT" #make it executable
 echo ""
-#echo "To activate the environment, run:"
-#echo "source $VENV_DIR/bin/activate"
+echo "Created launcher script at $RUN_SCRIPT"
+echo "You can now run the program anytime with:"
+echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
+
+
+
+
+echo ""
 echo "Setup complete."

@@ -1,15 +1,15 @@
 """
 Julian Kempenaers
 07/05/2025
-julian.kempenaers@gmail.com
 
-follow instructions in 'setup_instructions.txt'
+follow instructions in 'instructions.txt'
 press 'esc' to close the live scanner
 """
-#desired number of unique colours to cycle through (max 21)
-n_cols = 15
+#-----------------------------------------------------------------------------
+#Modifiable variables
+#stag libraries to be detected
+stag_libraries = [17, 19]
 
-zoom_factor = 2#how zoomed-in the livestream is. 
 #to zoom in or out on the video view (it zooms in on the top left corner)
 #4x zoom = 4056x3040 
 #2x zoom = 2028x1520
@@ -26,7 +26,7 @@ HEIGHT = 3040
 #shutterus = exposure. can range from 0 to 120000. Higher exposure increases brightness (better tag detection) but also increases blurriness of moving tags (worse tag detection!)
 SHUTTERUS = 3000
 GAIN = 0
-
+#------------------------------------------------------------------------------------------
 import cv2
 import time
 import numpy as np
@@ -37,31 +37,7 @@ import stag
 import skimage.draw
 import scipy
 
-colour_palette = [
-    (255, 0, 0),      # red
-    (0, 255, 0),      # green
-    (0, 0, 255),      # blue
-    (255, 255, 0),    # yellow
-    (0, 255, 255),    # cyan
-    (255, 0, 255),    # magenta
-    (255, 128, 0),    # orange
-    (128, 0, 255),    # violet
-    (0, 128, 255),    # light blue
-    (128, 255, 0),    # lime
-    (255, 0, 128),    # pink
-    (128, 128, 0),    # olive
-    (0, 128, 128),    # teal
-    (128, 0, 128),    # purple
-    (255, 153, 51),   # apricot
-    (102, 255, 102),  # light green
-    (102, 102, 255),  # periwinkle
-    (255, 102, 178),  # rose
-    (255, 204, 0),    # gold
-    (0, 204, 153),    # turquoise
-    (153, 51, 255)    # amethyst
-]
-
-def runCameraAcquisition(colour_palette, display_width, display_height):
+def runCameraAcquisition(display_width, display_height):
 	"""
 	Run the camera acquisition loop and process frames with overlay.
 	"""
@@ -76,16 +52,14 @@ def runCameraAcquisition(colour_palette, display_width, display_height):
 	picam2.start()
 	time.sleep(2)#camera warmup time
 	
-	recentIDs = [] #empty list wehre IDs of last n detected markers will be stored
-	id_to_colour = {} 
-	available_colours = colour_palette.copy()
+	
 	while True:
 		#capture a new frame
 		yuv = picam2.capture_array("main")
 		grey = yuv[:HEIGHT, :WIDTH]
 		
-		img, render, corners, ids, recentIDs, available_colours = detect_markers_and_assign_colours(grey, recentIDs, available_colours)
-		render = apply_overlay(img, render, corners, ids, recentIDs)				
+		img, render, corners, ids = detect_markers(grey)
+		render = apply_overlay(img, render, corners, ids)				
 		resized_render = cv2.resize(render, (display_width, display_height))
 		
 		cv2.namedWindow('Live Stream', cv2.WND_PROP_FULLSCREEN) #create livestream window
@@ -101,7 +75,7 @@ def runCameraAcquisition(colour_palette, display_width, display_height):
 	print("camera stopped, closing live stream")
 	cv2.destroyAllWindows()
 	
-def detect_markers_and_assign_colours(grey, recentIDs, available_colours):
+def detect_markers(grey):
 	if normalise_view:
 		# normalize to 0-255 and convert to uint8
 		grey_8bit = cv2.convertScaleAbs(grey, alpha=(255.0 / grey.max()))
@@ -111,48 +85,20 @@ def detect_markers_and_assign_colours(grey, recentIDs, available_colours):
 	render = np.repeat(grey_8bit.copy()[:,:,np.newaxis], 3, axis = 2) #reshapes image array to add a new axis: convert from grayscale to 3D array with 3 identical channels (simulating RGB)
 	frame_corners = []
 	frame_ids = []
-	temp_hold = []
-	new_ids = []
-	for k, libraryHD in enumerate([17, 19]): #iterate over the 17 and 19 stag libraries
+	for k, libraryHD in enumerate(stag_libraries): #iterate over the 17 and 19 stag libraries
 		(corners, ids, rejected_corners) = stag.detectMarkers(img, libraryHD) 
 		frame_corners.extend(corners)
-		frame_ids.extend((libraryHD-10)*1000+ids) #create a unique marker (combination of library & tag id
-	for marker_id in frame_ids: #first check for presence of each marker in the recentIDs list
-		found = False
-		#if the marker_id is present in the LEFT column of recentIDs
-		for row in recentIDs:
-			if row[0] == marker_id: #search through recentIDs and compare to the detected marker_IDs. 
-				temp_hold.append(row.copy()) #duplicate the row into temp_hold
-				recentIDs.remove(row) #then remove the row from recentID
-				found= True
-				break #once it's found we can stop searching in recentIDs
-		if not found: #if the current ID wasn't found in recentIDs
-			new_ids.append([marker_id]) #store it in 'new_ids' for now. 
-	total_rows = len(recentIDs) + len(temp_hold) + len(new_ids)
-	if total_rows > n_cols:
-		x = total_rows -n_cols
-		for row in recentIDs[-x:]: #for the last x rows in recentIDs
-			available_colours.append(row[1]) #return the colours to available_colours pool
-		recentIDs = recentIDs[:-x] #remove the last x rows from recentIDs.
-	#assign colours to new IDs. 
-	if new_ids:
-		for i in range(len(new_ids)):
-			if available_colours:
-				new_ids[i].append(available_colours.pop())
-			else:
-				print('not enough colours')
-	#add temp_hold and new_ids to the top of recentIDs
-	recentIDs = temp_hold + new_ids + recentIDs
+		frame_ids.extend((libraryHD-10)*1000+ids) #create a unique marker (combination of library & tag id)
 	
 			
-	return img, render, frame_corners, frame_ids, recentIDs, available_colours
+	return img, render, frame_corners, frame_ids
 		
 	
-def apply_overlay(img, render, corners, ids, recentIDs):		
+def apply_overlay(img, render, corners, ids):		
 	for i, marker in enumerate(corners):
 		marker = marker[0] #extract marker corners   
 		marker_id = ids[i]
-		color = next((row[1] for row in recentIDs if row[0] == marker_id), None)
+		color = (0, 0, 255)
 		assert marker.ndim == 2 #make marker data 2D
 		#add boxes to mask
 		single_marker_mask = np.zeros_like(render[:, :, 0], dtype = np.bool_) #initiate mask for this marker
@@ -176,5 +122,5 @@ def apply_overlay(img, render, corners, ids, recentIDs):
 	
 if __name__ == '__main__':
 	#Start the camera acquisition process
-	runCameraAcquisition(colour_palette, display_width, display_height)
+	runCameraAcquisition(display_width, display_height)
 	
