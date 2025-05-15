@@ -126,7 +126,7 @@ def detect_markers_and_assign_colours(grey, recentIDs, available_colours):
 	for k, libraryHD in enumerate(stag_libraries): #iterate over the 17 and 19 stag libraries
 		(corners, ids, rejected_corners) = stag.detectMarkers(img, libraryHD) 
 		frame_corners.extend(corners)
-		frame_ids.extend((libraryHD-10)*1000+ids) #create a unique marker (combination of library & tag id
+		frame_ids.extend((libraryHD)*10000+ids) #create a unique marker (combination of library & tag id
 	for marker_id in frame_ids: #first check for presence of each marker in the recentIDs list
 		found = False
 		#if the marker_id is present in the LEFT column of recentIDs
