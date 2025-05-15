@@ -24,11 +24,11 @@ stag_libraries = [17, 19]
 #4x zoom = 4056x3040 
 #2x zoom = 2028x1520
 #1x zoom = 1014x760
-display_width = 2028
-display_height = 1520
+display_width = 1014
+display_height = 760
 
 #normalise the view to increase contrast? (sometimes makes the tag detection better, sometimes worse)
-normalise_view = True
+normalise_view = False
 
 #settings. Feel free to adjust shutterus (exposure) and gain
 WIDTH = 4056
@@ -116,17 +116,19 @@ def detect_markers_and_assign_colours(grey, recentIDs, available_colours):
 		# normalize to 0-255 and convert to uint8
 		grey_8bit = cv2.convertScaleAbs(grey, alpha=(255.0 / grey.max()))
 	else:
-		grey_8bit = (grey >> 2).astype(np.uint8)#without normalising
+		#grey_8bit = (grey >> 2).astype(np.uint8)#without normalising
+		grey_8bit = grey.astype(np.uint8)
 	img = 255 - grey_8bit #invert image for qr detection
+	
 	render = np.repeat(grey_8bit.copy()[:,:,np.newaxis], 3, axis = 2) #reshapes image array to add a new axis: convert from grayscale to 3D array with 3 identical channels (simulating RGB)
 	frame_corners = []
 	frame_ids = []
 	temp_hold = []
 	new_ids = []
-	for k, libraryHD in enumerate(stag_libraries): #iterate over the 17 and 19 stag libraries
+	for k, libraryHD in enumerate(stag_libraries): #iterate over the desired stag libraries
 		(corners, ids, rejected_corners) = stag.detectMarkers(img, libraryHD) 
 		frame_corners.extend(corners)
-		frame_ids.extend((libraryHD)*10000+ids) #create a unique marker (combination of library & tag id
+		frame_ids.extend((libraryHD)*1000+ids) #create a unique marker (combination of library & tag id
 	for marker_id in frame_ids: #first check for presence of each marker in the recentIDs list
 		found = False
 		#if the marker_id is present in the LEFT column of recentIDs
@@ -173,7 +175,7 @@ def apply_overlay(img, render, corners, ids, recentIDs):
 		
 		# Draw ID text
 		#compute center
-		center_x = 	int(np.mean(marker[:, 0]))-180
+		center_x = 	int(np.mean(marker[:, 0]))-400
 		center_y = int(np.mean(marker[:, 1])) -10  
 		height, width = render.shape[:2]
 		#check if the text falls within image bounds

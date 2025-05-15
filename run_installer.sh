@@ -91,6 +91,35 @@ echo "Created launcher script at $RUN_SCRIPT"
 echo "You can now run the program anytime with:"
 echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
 
+#generate a run_stag.sh file
+RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_without_RecentIdColourCoding_Save_video.sh"
+cat <<EOF > "$RUN_SCRIPT"
+#!/bin/bash
+cd "$LIVE_QR_SCANNER_DIR"
+source live_qr_scanner/bin/activate
+python live_stag_scanner_nRICC_video.py
+EOF
+
+chmod +x "$RUN_SCRIPT" #make it executable
+echo ""
+echo "Created launcher script at $RUN_SCRIPT"
+echo "You can now run the program anytime with:"
+echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
+
+#generate a run_stag.sh file
+RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_with_RecentIdColourCoding_SaveVideo.sh"
+cat <<EOF > "$RUN_SCRIPT"
+#!/bin/bash
+cd "$LIVE_QR_SCANNER_DIR"
+source live_qr_scanner/bin/activate
+python live_stag_scanner_RICC_video.py
+EOF
+
+chmod +x "$RUN_SCRIPT" #make it executable
+echo ""
+echo "Created launcher script at $RUN_SCRIPT"
+echo "You can now run the program anytime with:"
+echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
 
 
 

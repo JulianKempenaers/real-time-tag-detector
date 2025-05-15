@@ -80,7 +80,8 @@ def detect_markers(grey):
 		# normalize to 0-255 and convert to uint8
 		grey_8bit = cv2.convertScaleAbs(grey, alpha=(255.0 / grey.max()))
 	else:
-		grey_8bit = (grey >> 2).astype(np.uint8)#without normalising
+		#grey_8bit = (grey >> 2).astype(np.uint8)#without normalising
+		grey_8bit = grey.astype(np.uint8)
 	img = 255 - grey_8bit #invert image for qr detection
 	render = np.repeat(grey_8bit.copy()[:,:,np.newaxis], 3, axis = 2) #reshapes image array to add a new axis: convert from grayscale to 3D array with 3 identical channels (simulating RGB)
 	frame_corners = []
@@ -88,8 +89,7 @@ def detect_markers(grey):
 	for k, libraryHD in enumerate(stag_libraries): #iterate over the 17 and 19 stag libraries
 		(corners, ids, rejected_corners) = stag.detectMarkers(img, libraryHD) 
 		frame_corners.extend(corners)
-		frame_ids.extend((libraryHD)*10000+ids) #create a unique marker (combination of library & tag id)
-	
+		frame_ids.extend((libraryHD)*1000+ids) #create a unique marker (combination of library & tag id)	
 			
 	return img, render, frame_corners, frame_ids
 		
@@ -109,7 +109,7 @@ def apply_overlay(img, render, corners, ids):
 		
 		# Draw ID text
 		#compute center
-		center_x = 	int(np.mean(marker[:, 0]))-180
+		center_x = 	int(np.mean(marker[:, 0]))-400
 		center_y = int(np.mean(marker[:, 1])) -10  
 		height, width = render.shape[:2]
 		#check if the text falls within image bounds
