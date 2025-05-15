@@ -10,9 +10,17 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 
 ## Demo
 
+There are two types of STag detectors in this repository:
+1. With RecentId Colour Coding:
 <!-- 
-[![Watch the demo](images/demo_frame.jpg)](assets/demo_video.mp4)
+[![Watch the demo](images/demo_frame.jpg)](assets/example_RICC.mp4)
 -->
+
+2. Without RecentId Colour Coding:
+<!-- 
+[![Watch the demo](images/demo_frame.jpg)](assets/example_nRICC.mp4)
+-->
+
 
  ## Compatibility Notes
 - [Installer](run_installer.sh) currently tested on **Raspberry Pi OS** (Linux terminal).
