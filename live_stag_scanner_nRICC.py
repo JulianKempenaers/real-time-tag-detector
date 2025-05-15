@@ -88,7 +88,7 @@ def detect_markers(grey):
 	for k, libraryHD in enumerate(stag_libraries): #iterate over the 17 and 19 stag libraries
 		(corners, ids, rejected_corners) = stag.detectMarkers(img, libraryHD) 
 		frame_corners.extend(corners)
-		frame_ids.extend((libraryHD-10)*1000+ids) #create a unique marker (combination of library & tag id)
+		frame_ids.extend((libraryHD)*10000+ids) #create a unique marker (combination of library & tag id)
 	
 			
 	return img, render, frame_corners, frame_ids
