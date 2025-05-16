@@ -11,14 +11,14 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 ## Demo
 
 There are two types of STag detectors in this repository:
-1. [With RecentId Colour Coding](https://rawcdn.githack.com/JulianKempenaers/real-time-tag-detector/main/assets/example_RICC.mp4)
+1. [![With RecentId Colour Coding](https://youtube.com/shorts/ML3p0sLLcNw?feature=share/hqdefault.jpg)](https://youtube.com/shorts/ML3p0sLLcNw?feature=share)
 
 <video controls width="600">
-  <source src="https://rawcdn.githack.com/JulianKempenaers/real-time-tag-detector/main/assets/example_RICC.mp4" type="video/mp4">
+  <source src="https://rawcdn.githack.com/JulianKempenaers/real-time-tag-detector/7451112c7ee394b05cb5f6900199f8f47273ff03/assets/example_RICC.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
-2. [Without RecentId Colour Coding](https://rawcdn.githack.com/JulianKempenaers/real-time-tag-detector/main/assets/example_nRICC.mp4)
+2. [![Without RecentId Colour Coding](https://youtube.com/shorts/l4dGVPSPQto?feature=share/hqdefault.jpg)](https://youtube.com/shorts/l4dGVPSPQto?feature=share)
 
  ## Compatibility Notes
 - [Installer](run_installer.sh) currently tested on **Raspberry Pi OS** (Linux terminal).
