@@ -9,7 +9,7 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 ## Demo
 
 There are two types of STag detectors in this repository:
-With RecentId Colour Coding | Without RecentId Colour Coding
+[With RecentId Colour Coding](assets/example_RICC.mp4) | [Without RecentId Colour Coding](assets/example_nRICC.mp4)
 :-: | :-:
 ![example_RICC](https://github.com/user-attachments/assets/39f25e92-64d8-450b-b841-7fe114bbed60) | ![example_nRICC](https://github.com/user-attachments/assets/6f79223b-624f-43e2-8c93-a4ae6fb85260)
 
