@@ -1,6 +1,6 @@
 #first time installation:
 #------------------------
-#1. add the live_qr_scanner_folder folder to your desktop or documents folder (not on external drive)
+#1. add the live_qr_scanner_folder folder to your desktop or documents folder (not on external drive) of your Raspberry Pi
 
 #2. find the 'run_installer.sh' file. double click and select 'execute in terminal'
 #this will not work if you are not connected to the internet
