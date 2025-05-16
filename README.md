@@ -15,7 +15,7 @@ There are two types of STag detectors in this repository:
 <!-- 
 [![Watch the demo](images/demo_frame.jpg)](assets/example_RICC.mp4)
 -->
-
+[Watch example_RICC.mp4](https://rawcdn.githack.com/JulianKempenaers/real-time-tag-detector/main/assets/example_RICC.mp4)
 2. Without RecentId Colour Coding:
 <!-- 
 [![Watch the demo](images/demo_frame.jpg)](assets/example_nRICC.mp4)
