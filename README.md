@@ -1,4 +1,4 @@
-# Real-Time STag Detector
+![example_RICC](https://github.com/user-attachments/assets/5457cc1e-d019-4bba-b90b-40fe86736528)# Real-Time STag Detector
 
 A lightweight Python tool for real-time detection and tracking of STag markers. It displays camera output with tag information overlaid live on the video stream. 
 
@@ -11,14 +11,12 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 ## Demo
 
 There are two types of STag detectors in this repository:
-1. [![With RecentId Colour Coding](https://youtube.com/shorts/ML3p0sLLcNw?feature=share/hqdefault.jpg)](https://youtube.com/shorts/ML3p0sLLcNw?feature=share)
+1. [![With RecentId Colour Coding](https://youtube.com/shorts/ML3p0sLLcNw?feature=share/maxresdefault.jpg)](https://youtube.com/shorts/ML3p0sLLcNw?feature=share)
 
-<video controls width="600">
-  <source src="https://rawcdn.githack.com/JulianKempenaers/real-time-tag-detector/7451112c7ee394b05cb5f6900199f8f47273ff03/assets/example_RICC.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+![example_RICC](https://github.com/user-attachments/assets/39f25e92-64d8-450b-b841-7fe114bbed60)
 
-2. [![Without RecentId Colour Coding](https://youtube.com/shorts/l4dGVPSPQto?feature=share/hqdefault.jpg)](https://youtube.com/shorts/l4dGVPSPQto?feature=share)
+2. [![Without RecentId Colour Coding](https://youtube.com/shorts/l4dGVPSPQto?feature=share/maxresdefault.jpg)](https://youtube.com/shorts/l4dGVPSPQto?feature=share)
+
 
  ## Compatibility Notes
 - [Installer](run_installer.sh) currently tested on **Raspberry Pi OS** (Linux terminal).
