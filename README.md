@@ -24,12 +24,14 @@ Both RICC and nRICC exist as two distinct versions:
 2. Record a video of detected tags and save the video.
 
 After running the installer, the four tools can be ran using the executable .sh files:
-Tools (executable .sh files) | Recent Id Colour Coding? | real-time view | Record and save video
-:--- | :-: | :-:| :-:
-run_stag_with_RecentIColourCoding.sh | Yes | Yes | No
-run_stag_with_RecentIColourCoding_video.sh | Yes | No | Yes
-run_stag_without_RecentIColourCoding.sh| No | Yes | No
-run_stag_without_RecentIColourCoding_video.sh| No | No | Yes
+Tools (executable .sh files) | Recent Id Colour Coding? | real-time view | Record and save video | Number of cameras
+:--- | :-: | :-:| :-: | :-:
+RecentIdColourCoding.sh | Yes | Yes | No | 1
+RecentIdColourCoding_2cams.sh | Yes | Yes | No | 2
+RecentIdColourCoding_video.sh | Yes | No | Yes | 1
+without_RecentIdColourCoding.sh | No | Yes | No | 1
+without_RecentIdColourCoding_2cams.sh | No | Yes | No | 2
+without_RecentIdColourCoding_video.sh| No | No | Yes | 1
 
 ---
 ## License
