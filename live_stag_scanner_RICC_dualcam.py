@@ -46,7 +46,6 @@ import select
 import stag
 import skimage.draw
 import scipy
-import threading
 
 colour_palette = [
     (255, 0, 0),      # red
@@ -71,84 +70,6 @@ colour_palette = [
     (0, 204, 153),    # turquoise
     (153, 51, 255)    # amethyst
 ]
-def camera_capture_loop(picam2, output_holder, width, height):
-    while True:
-        yuv = picam2.capture_array("main")
-        grey = yuv[:height, :width]
-        output_holder[0] = grey
-
-def runCameraAcquisitionDual(colour_palette, display_width, display_height):
-    FORMAT = 'YUV420'
-
-    # Init both cameras
-    picam1 = Picamera2(0)
-    config1 = picam1.create_still_configuration({'format': FORMAT, 'size': (WIDTH, HEIGHT)})
-    picam1.configure(config1)
-    picam1.set_controls({"ExposureTime": SHUTTERUS, "AnalogueGain": GAIN})
-    
-    picam2 = Picamera2(1)
-    config2 = picam2.create_still_configuration({'format': FORMAT, 'size': (WIDTH, HEIGHT)})
-    picam2.configure(config2)
-    picam2.set_controls({"ExposureTime": SHUTTERUS, "AnalogueGain": GAIN})
-
-    # Start both cameras
-    picam1.start()
-    picam2.start()
-    time.sleep(2)
-
-    # Hold frames from threads
-    frame1_holder = [None]
-    frame2_holder = [None]
-
-    # Start threads to continuously update frames
-    t1 = threading.Thread(target=camera_capture_loop, args=(picam1, frame1_holder, WIDTH, HEIGHT))
-    t2 = threading.Thread(target=camera_capture_loop, args=(picam2, frame2_holder, WIDTH, HEIGHT))
-    t1.daemon = True
-    t2.daemon = True
-    t1.start()
-    t2.start()
-
-    recentIDs = []
-    available_colours = colour_palette.copy()
-    recentIDs_lock = threading.Lock()
-
-    while True:
-        if frame1_holder[0] is None or frame2_holder[0] is None:
-            continue  # wait until both frames are ready
-
-        grey1 = frame1_holder[0]
-        grey2 = frame2_holder[0]
-
-        # Process first frame
-        with recentIDs_lock:
-            img1, render1, corners1, ids1, recentIDs, available_colours = detect_markers_and_assign_colours(
-                grey1, recentIDs, available_colours)
-
-        render1 = apply_overlay(img1, render1, corners1, ids1, recentIDs)
-        resized1 = cv2.resize(render1, (display_width, display_height))
-
-        # Process second frame
-        with recentIDs_lock:
-            img2, render2, corners2, ids2, recentIDs, available_colours = detect_markers_and_assign_colours(
-                grey2, recentIDs, available_colours)
-
-        render2 = apply_overlay(img2, render2, corners2, ids2, recentIDs)
-        resized2 = cv2.resize(render2, (display_width, display_height))
-
-        # Combine both images side by side
-        combined = np.hstack((resized1, resized2))
-
-        # Display
-        cv2.namedWindow('Dual Camera Live Stream', cv2.WND_PROP_FULLSCREEN)
-        cv2.setWindowProperty('Dual Camera Live Stream', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow('Dual Camera Live Stream', combined)
-
-        # Exit on ESC
-        if cv2.waitKey(1) & 0xFF == 27:
-            print("Stopping dual camera stream...")
-            break
-
-    cv2.destroyAllWindows()
 
 def runCameraAcquisition(colour_palette, display_width, display_height):
 	"""
@@ -265,40 +186,7 @@ def apply_overlay(img, render, corners, ids, recentIDs):
 		cv2.putText(render, str(marker_id[0]), (center_x, center_y), cv2.FONT_HERSHEY_SIMPLEX, 3, color, 6)	
 	return render
 	
-
 if __name__ == '__main__':
-	import sys
-	import traceback
-	from picamera2.encoders import Quality
-	import traceback
+	#Start the camera acquisition process
+	runCameraAcquisition(colour_palette, display_width, display_height)
 	
-	def is_camera_usable(index):
-		try:
-			cam = Picamera2(index)
-			config = cam.create_still_configuration({'format': 'YUV420', 'size': (WIDTH, HEIGHT)})
-			cam.configure(config)
-			cam.start()
-			time.sleep(0.5)
-			cam.stop()
-			cam.close()
-			return True
-		except Exception as e:
-			print(f"⚠️ Camera {index} failed: {e}")
-			return False
-
-	try:
-		usable_cameras = [i for i in range(2) if is_camera_usable(i)]
-		if not usable_cameras:
-			print("No usable cameras detected. Exiting.")
-			sys.exit(1)
-		elif len(usable_cameras) == 1:
-			print("One usable camera detected. Running single-camera mode.")
-			runCameraAcquisition(colour_palette, display_width, display_height)
-		elif len(usable_cameras) >= 2:
-			print("Two usable cameras detected. Running dual-camera mode.")
-			runCameraAcquisitionDual(colour_palette, display_width, display_height)
-
-	except Exception:
-		print("Unhandled exception occurred:")
-		traceback.print_exc()
-		sys.exit(1)
