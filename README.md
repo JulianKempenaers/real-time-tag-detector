@@ -26,7 +26,7 @@ Both RICC and nRICC exist as two distinct versions:
 After running the installer, the four tools can be ran using the executable .sh files:
 Tools (executable .sh files) | Recent Id Colour Coding? | real-time view | Record and save video | Number of cameras | Notes
 :-- | :- | :-| :- | :- | :--
-RecentIdColourCoding.sh | Yes | Yes | No |  1 or 2 | Number of cameras automatically detected. Always restart raspberry pi if you change how many cameras are plugged into the pi.)
+RecentIdColourCoding.sh | Yes | Yes | No |  1 or 2 | Number of cameras detected automatically. Always restart the Raspberry Pi after plugging in or removing cameras.
 RecentIdColourCoding_video.sh | Yes | No | Yes | 1 |
 without_RecentIdColourCoding.sh | No | Yes | No | 1 |
 without_RecentIdColourCoding_video.sh| No | No | Yes | 1 |
