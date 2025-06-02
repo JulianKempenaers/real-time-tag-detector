@@ -1,3 +1,4 @@
+# Real-time tag detector
 A lightweight Python tool for real-time detection and tracking of STag markers. It displays camera output with tag information overlaid live on the video stream. 
 
 ### What are STags?
@@ -10,7 +11,7 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 - Works with **Picam2** camera system
 - Uses the **STag** library by **Manfred Stoiber** for marker detection
 
-# Installation
+## Installation
 Instructions for first-time installation and use can be found [here](INSTRUCTIONS.txt).
 
 ## Available tools:
