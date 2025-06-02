@@ -8,7 +8,7 @@
 
 #using code after installation:
 #-------------------------------
-#1. Decide whether you want to use RecentId Colour Coding (RICC) or not (nRICC). 
+#1. Decide whether you want to use RecentId Colour Coding (RICC) or not (nRICC) (See README for more information on RICC). 
 
 #2. Optionally open the code to edit some modifiable variables (see more details on modifiable variables below)
 
