@@ -11,7 +11,7 @@ STags, designed by Manfred Stoiber, are used for motion tracking of animals.  Th
 - Works with **Picam2** camera system
 - Uses the **STag** library by **Manfred Stoiber** for marker detection
 
-## Installation
+## Installation and Instructions
 Instructions for first-time installation and use can be found [here](INSTRUCTIONS.txt).
 
 ## Available tools:
