@@ -4,7 +4,7 @@
 USER_HOME=$HOME
 
 #search for the live_qr_scanner_folder folder 
-LIVE_QR_SCANNER_DIR=$(find "$USER_HOME" -type d -name "live_qr_scanner_folder" 2>/dev/null)
+LIVE_QR_SCANNER_DIR=$(find "$USER_HOME" -type d -name "real-time-tag-detector" 2>/dev/null)
 #check if the folder was found
 
 #check if the folder was found
