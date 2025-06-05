@@ -8,7 +8,7 @@ press 'esc' to close the live scanner
 #-----------------------------------------------------------------------------
 #Modifiable variables
 #stag libraries to be detected
-stag_libraries = [17, 19]
+stag_libraries = [17, 19, 21, 23]
 
 #to zoom in or out on the video view (it zooms in on the top left corner)
 #4x zoom = 4056x3040 
