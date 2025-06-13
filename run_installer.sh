@@ -1,16 +1,15 @@
 #!/bin/bash
 
 #use the current user's home directory 
-USER_HOME=$HOME
+USER_HOME=$HOME/Documents
 
-#search for the live_qr_scanner_folder folder 
+#search for the real-time-tag-detector-main folder 
 LIVE_QR_SCANNER_DIR=$(find "$USER_HOME" -type d -name "real-time-tag-detector-main" 2>/dev/null)
-#check if the folder was found
 
 #check if the folder was found
 if [ ! -d "$LIVE_QR_SCANNER_DIR" ]; then
-	echo "live_qr_scanner_folder folder not found. Please make sure the folder exists in the Documents folder"
-	exit 1
+	echo "real-time-tag-detector folder not found. Please make sure the folder exists in the Documents folder"
+	exit 0
 fi
 
 
@@ -19,7 +18,7 @@ sudo apt update
 sudo apt install -y python3-picamera2  # Install picamera2 system-wide
 
 # Define venv folder name
-VENV_DIR="$LIVE_QR_SCANNER_DIR/live_qr_scanner"
+VENV_DIR="$LIVE_QR_SCANNER_DIR/real-time-tag-detector"
 
 # Check if virtual environment exists
 if [ ! -d "$VENV_DIR" ]; then
@@ -61,58 +60,12 @@ fi
 
 
 #generate a run_stag.sh file
-RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_with_RecentIdColourCoding.sh"
+RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/Run_Stag_Detection.sh"
 cat <<EOF > "$RUN_SCRIPT"
 #!/bin/bash
 cd "$LIVE_QR_SCANNER_DIR"
-source live_qr_scanner/bin/activate
-python live_stag_scanner_RICC.py
-EOF
-
-chmod +x "$RUN_SCRIPT" #make it executable
-echo ""
-echo "Created launcher script at $RUN_SCRIPT"
-echo "You can now run the program anytime with:"
-echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
-
-
-#generate a run_stag.sh file
-RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_without_RecentIdColourCoding.sh"
-cat <<EOF > "$RUN_SCRIPT"
-#!/bin/bash
-cd "$LIVE_QR_SCANNER_DIR"
-source live_qr_scanner/bin/activate
-python live_stag_scanner_nRICC.py
-EOF
-
-chmod +x "$RUN_SCRIPT" #make it executable
-echo ""
-echo "Created launcher script at $RUN_SCRIPT"
-echo "You can now run the program anytime with:"
-echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
-
-#generate a run_stag.sh file
-RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_without_RecentIdColourCoding_Save_video.sh"
-cat <<EOF > "$RUN_SCRIPT"
-#!/bin/bash
-cd "$LIVE_QR_SCANNER_DIR"
-source live_qr_scanner/bin/activate
-python live_stag_scanner_nRICC_video.py
-EOF
-
-chmod +x "$RUN_SCRIPT" #make it executable
-echo ""
-echo "Created launcher script at $RUN_SCRIPT"
-echo "You can now run the program anytime with:"
-echo "'bash $RUN_SCRIPT' or by double clicking this file and executing in terminal" 
-
-#generate a run_stag.sh file
-RUN_SCRIPT="$LIVE_QR_SCANNER_DIR/run_stag_with_RecentIdColourCoding_SaveVideo.sh"
-cat <<EOF > "$RUN_SCRIPT"
-#!/bin/bash
-cd "$LIVE_QR_SCANNER_DIR"
-source live_qr_scanner/bin/activate
-python live_stag_scanner_RICC_video.py
+source real-time-tag-detector/bin/activate
+python Main.py
 EOF
 
 chmod +x "$RUN_SCRIPT" #make it executable

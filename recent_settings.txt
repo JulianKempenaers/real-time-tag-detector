@@ -1,0 +1,1 @@
+{'stag_libraries': [17, 19, 21, 23], 'normalise_view': False, 'n_cols': 21, 'SHUTTERUS': 3000, 'GAIN': 15, 'input_resolution_factor': 1, 'output_zoom': 1.0, 'save_video': False, 'filename_addon': '', 'colour_coding': True}
