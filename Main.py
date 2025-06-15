@@ -9,30 +9,9 @@ This code keeps track of the n most recently detected tags and colour codes them
 This means that even if they move out of frame for a few seconds, they will still 
 have the same colour when they return. 
 WARNING. The number of tags detectable in a single frame is capped at the n_col that you set. 
-		to add more colours, edit 'colour_palette' and increase n_cols accordingly.
-		To detect an unlimited number of tags per frame, use the scanner with "no Recent Id Colour Coding" (nRICC) instead.
+		to add more colours, edit 'colour_palette' edit the limit for n_cols in STag_GUI.py
+		To detect an unlimited number of tags per frame, simply set it to '1', resulting in no colour coding at all. 
 """
-#--------------------------------------------------------------------
-#MODIFIABLE VARIABLES:
-'''
-Modifiable variables:
-Camera capture variables: 
-	input_resolution_factor: 
-		The resolution at which you want to capture images (input_resolution * (760x1014)). Note higher input resolution = better tag detection but slower framerate
-	SHUTTERUS:
-		exposure time. can range from 0 to 120000. Higher exposure increases brightness (better tag detection) but also increases blurriness of moving tags (worse tag detection!)
-	GAIN: 
-		Higher gain = increased brightness
-
-Processing variables:
-	n_cols:
-		This code keeps track of the 'n_cols' most recently detected tags and colour codes them. e.g. if you want the code to colour code the 10 most recent bumblebees only, you'd set n_cols to 10. 
-		libraries used from the STag repository, to be detected by this code
-	output_zoom: 
-		How zoomed-in would you like the output video to be? higher zoom = reduced number of pixels to process = faster frame rate
-	normalise_view: 
-		normalise the brightness to increase contrast? (can make tag detection better, sometimes at the cost of increasing false positives)
-'''
 #----------------------------------------------------------------
 import cv2
 import time
