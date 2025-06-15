@@ -9,44 +9,13 @@
 
 #you can also manually install the packages yourself by installing the packages listed in requirements.txt
 
-#using code after installation:
+#Using the STag-detector after installation:
 #-------------------------------
-#1. Decide whether you want to use RecentId Colour Coding (RICC) or not (nRICC) (See README for more information on RICC). 
+#1. Choose whether you will use one or two cameras simultaneously and connect them to your Raspberry Pi before turning it on. 
 
-#2. Optionally open the code to edit some modifiable variables (see more details on modifiable variables below)
+#2. Run the executable .sh file (Run_Stag_Detection.sh) to open the Graphical User Interface (GUI)
+Note: If the GUI does not open, open the Run_Stag_Detection.sh file and copy-paste its content into the terminal and hit 'enter'. The error message will likely imply that your camera is not detected. Restarting the raspberry pi fixes this problem. Cameras must alwasy be connected upon startup. 
 
-#3.locate 'run_stag_with_RecentIdColourCoding.sh' or 'run_stag_without_RecentIdColourCoding.sh' file in the live_qr_scanner_folder
+#3. Refer to the README.md on github for more information about the settings to choose from (https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/README.md)
 
-#4. double click it and press 'execute in terminal'
-
-#5. hit 'Esc' to close the live detector
-
-
-#Modifiable variables:
-#----------------------
-#n_cols:
-This code keeps track of the n most recently detected tags and colour codes them. 
-This means that even if they move out of frame for a few seconds, they will still 
-have the same colour when they return. n_cols enables changing how many other tags
-can be detected before this one is forgotten.
-
-#stag_libraries:
-Various libraries of STags exist. Here you must specify which STags you're using 
-so that the code can detect them.
-
-
-#display_height and display_width:
-This applies to the size of the output screen.
-
-#normalise_view (True or False)
-Normalising view can improve contrast within the image, including contrast of tags.
-However sometimes it can increase false detection rates. 
-
-#WIDTH and HEIGHT
-These determine the resolution of the captured images. 
-If STags take up a small part of your image, you may want to capture in higher resolution.
-
-#SHUTTERUS and GAIN
-These are picamera2 specific settings for exposure and gain of the captured image
-
-
+#4. hit 'Esc' to close the live detector
