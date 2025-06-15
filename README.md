@@ -38,10 +38,10 @@ How many recent tags? | Integer (1-21) | The code keeps track of this many tags.
 Shutter speed (microseconds) | Integer (1-12000) | Higher exposure increases brightness (improved tag detection) but also increases blurriness of moving tags (worse tag detection!). 
 GAIN | &ge;1 | Higher Gain = brighter image, more noise. 
 Virtual Zoom | (1.0-10.0) |  Higher zoom = reduced number of pixels to process = faster frame rate
-Input resolution | Between 760x1014 and 3040x4056 | The resolution at which you want to capture images (input_resolution * (760x1014)). Note higher input resolution = better tag detection but slower framerate
+Input resolution | Between 760x1014 and 3040x4056 | The resolution at which you want to capture images (input_resolution * (760x1014)). Note higher input resolution = better tag detection but slower framerate. If STags take up a small part of your image, you may want to capture in higher resolution. Otherwise, lower resolution is recommended.
 Save Video? | Yes/No toggle | It is possible to run the live-stream view with or without automatically saving it. 
 Video Filename Addon | Text (optional) | When selecting to save the tag detections video, this will be added on to the filename of your saved video file. 
-Normalise Brightness | Yes/No toggle | This increases contrast before stag-detection by normalising the pixel values between 0 and 155. This is not recommended as it can lead to false positive detections, but could be used in particularly low contrast settings. 
+Normalise Brightness | Yes/No toggle | This increases contrast before stag-detection by normalising the pixel values between 0 and 155. Normalising can improve contrast within the image, including contrast of tags. However sometimes it can increase lead to false positive detections. Therefore, it is recommended to try tweaking GAIN first.  
 
 ---
 ## License
