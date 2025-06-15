@@ -4,9 +4,9 @@ A lightweight Python tool for real-time detection and tracking of STag markers. 
 This **real-time STag detector** (this repository) was developed as a tool to display detected tags in real-time, allowing for a **live view of the tags** rather than having to analyze them after the recording process. 
 
 This code keeps track of the n most recently detected tags and colour codes them. This means that even if a tag moves out of frame for a few seconds, it will still have the same colour when it returns.
-
-![Example_RICC](https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/assets/example_RICC.gif?raw=true)
-![Example_nRICC](https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/assets/example_nRICC.gif?raw=true)
+<p align="center">
+  <img src="https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/assets/example_RICC.gif?raw=true" width="300" />
+</p>
 
 ### What are STags?
 STags, designed by [Burak Benligiray](https://github.com/bbenligiray/stag), are used for motion tracking of animals.  
