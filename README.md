@@ -5,7 +5,8 @@ This **real-time STag detector** (this repository) was developed as a tool to di
 
 This code keeps track of the n most recently detected tags and colour codes them. This means that even if a tag moves out of frame for a few seconds, it will still have the same colour when it returns.
 
-![example_RICC](https://github.com/user-attachments/assets/39f25e92-64d8-450b-b841-7fe114bbed60)  ![example_nRICC](https://github.com/user-attachments/assets/6f79223b-624f-43e2-8c93-a4ae6fb85260)
+![Example_RICC](https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/assets/example_RICC.gif?raw=true)
+![Example_nRICC](https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/assets/example_nRICC.gif?raw=true)
 
 ### What are STags?
 STags, designed by [Burak Benligiray](https://github.com/bbenligiray/stag), are used for motion tracking of animals.  
