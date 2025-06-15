@@ -33,14 +33,14 @@ These settings can be tweaked to improve STag detection.
 
 Setting | Options | Description 
 :-- | :- | :-
-STag Libraries | multi-select: 17, 19, 21, 23 | This refers to the ['LibaryHD'](https://github.com/manfredstoiber/stag#-configuration:~:text=can%20be%20specified%3A-,libraryHD,-%3A) or 'Type' of STags that should be detected. Only the markers of the chosen library will be detected. When more than one library is selected, detected IDs will be displayed as a combination of the library and ID number. e.g. id 115 of Library 17 will be: 17115, 
+STag Libraries | Multi-select: 17, 19, 21, 23 | This refers to the ['LibaryHD'](https://github.com/manfredstoiber/stag#-configuration:~:text=can%20be%20specified%3A-,libraryHD,-%3A) or 'Type' of STags that should be detected. Only the markers of the chosen library will be detected. When more than one library is selected, detected IDs will be displayed as a combination of the library and ID number. e.g. id 115 of Library 17 will be: 17115, 
 How many recent tags? | Integer (1-21) | The code keeps track of this many tags. This code keeps track of the n most recently detected tags and colour codes them. This means that even if a tag moves out of frame for a few seconds, it will still have the same colour when it returns, unless n other tags have been detected since it moved out of frame. This variable enables changing how many other tags can be detected before this one is forgotten. If this is set to 1: No tags are detected, and there will be no colour coding. 
-Shutter speed (microseconds) | int (1-12000) | Higher exposure increases brightness (improved tag detection) but also increases blurriness of moving tags (worse tag detection!). 
+Shutter speed (microseconds) | Integer (1-12000) | Higher exposure increases brightness (improved tag detection) but also increases blurriness of moving tags (worse tag detection!). 
 GAIN | &ge;1 | Higher Gain = brighter image, more noise. 
 Virtual Zoom | (1.0-10.0) |  Higher zoom = reduced number of pixels to process = faster frame rate
-Input resolution | between 760x1014 and 3040x4056 | The resolution at which you want to capture images (input_resolution * (760x1014)). Note higher input resolution = better tag detection but slower framerate
+Input resolution | Between 760x1014 and 3040x4056 | The resolution at which you want to capture images (input_resolution * (760x1014)). Note higher input resolution = better tag detection but slower framerate
 Save Video? | Yes/No toggle | It is possible to run the live-stream view with or without automatically saving it. 
-Video Filename Addon | text (optional) | When selecting to save the tag detections video, this will be added on to the filename of your saved video file. 
+Video Filename Addon | Text (optional) | When selecting to save the tag detections video, this will be added on to the filename of your saved video file. 
 Normalise Brightness | Yes/No toggle | This increases contrast before stag-detection by normalising the pixel values between 0 and 155. This is not recommended as it can lead to false positive detections, but could be used in particularly low contrast settings. 
 
 ---
