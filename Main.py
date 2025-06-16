@@ -9,9 +9,30 @@ This code keeps track of the n most recently detected tags and colour codes them
 This means that even if they move out of frame for a few seconds, they will still 
 have the same colour when they return. 
 WARNING. The number of tags detectable in a single frame is capped at the n_col that you set. 
-		to add more colours, edit 'colour_palette' edit the limit for n_cols in STag_GUI.py
-		To detect an unlimited number of tags per frame, simply set it to '1', resulting in no colour coding at all. 
+		to add more colours, edit 'colour_palette' and increase n_cols accordingly.
+		To detect an unlimited number of tags per frame, use the scanner with "no Recent Id Colour Coding" (nRICC) instead.
 """
+#--------------------------------------------------------------------
+#MODIFIABLE VARIABLES:
+'''
+Modifiable variables:
+Camera capture variables: 
+	input_resolution_factor: 
+		The resolution at which you want to capture images (input_resolution * (760x1014)). Note higher input resolution = better tag detection but slower framerate
+	SHUTTERUS:
+		exposure time. can range from 0 to 120000. Higher exposure increases brightness (better tag detection) but also increases blurriness of moving tags (worse tag detection!)
+	GAIN: 
+		Higher gain = increased brightness
+
+Processing variables:
+	n_cols:
+		This code keeps track of the 'n_cols' most recently detected tags and colour codes them. e.g. if you want the code to colour code the 10 most recent bumblebees only, you'd set n_cols to 10. 
+		libraries used from the STag repository, to be detected by this code
+	output_zoom: 
+		How zoomed-in would you like the output video to be? higher zoom = reduced number of pixels to process = faster frame rate
+	normalise_view: 
+		normalise the brightness to increase contrast? (can make tag detection better, sometimes at the cost of increasing false positives)
+'''
 #----------------------------------------------------------------
 import cv2
 import time
@@ -172,7 +193,7 @@ def runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoo
 		cv2.namedWindow('Dual Camera Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN)
 		cv2.setWindowProperty('Dual Camera Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 		cv2.putText(combined, "Press ESC to exit", (20, 40),
-            cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 2)
+            cv2.FONT_HERSHEY_SIMPLEX, 2.0, (0, 0, 255), 3)
 		cv2.imshow('Dual Camera Live Stream - PRESS ESC TO EXIT', combined)
 		if save_video:
 			frame_to_write = pad_to_size(combined, WIDTH, HEIGHT)
@@ -235,8 +256,8 @@ def runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom):
 		
 		cv2.namedWindow('Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN) #create livestream window
 		cv2.setWindowProperty('Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN) #set the window fullscreen
-		cv2.putText(resized_render, "Press ESC to exit", (20, 40),
-            cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 2)
+		cv2.putText(resized_render, "Press ESC to exit", (20, 50),
+            cv2.FONT_HERSHEY_SIMPLEX, 2.0, (0, 0, 255), 3)
 		cv2.imshow('Live Stream - PRESS ESC TO EXIT', resized_render)		
 		if save_video:
 			frame_to_write = pad_to_size(resized_render, WIDTH, HEIGHT)
@@ -327,16 +348,18 @@ def apply_overlay(img, render, corners, ids, recentIDs):
 		center_y = int(np.mean(marker[:, 1]))  
 		height, width = render.shape[:2]
 		#check if the text falls within image bounds
+		
 		if center_x-75 < 0 :
 			text_x = center_x+30
 		else:
-			text_x = 	center_x-75
+			text_x = center_x-75
 		if center_y-35 < 0 :
 			text_y = center_y+50
 		else:
 			text_y = center_y -20
-		cv2.putText(render, str(marker_id[0]), (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5*input_resolution_factor, color, int(round(1*input_resolution_factor)))	
+		cv2.putText(render, str(marker_id[0]), (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5*(input_resolution_factor/output_zoom), color, int(round(1*(input_resolution_factor/output_zoom))))	
 	return render
+
 
 def add_recentID_bar(recentIDs, combined):
 	bar_height = 200
@@ -409,7 +432,7 @@ if __name__ == '__main__':
 	try:
 		usable_cameras = [i for i in range(2) if is_camera_usable(i)]
 		if not usable_cameras:
-			print("No usable cameras detected. Exiting.")
+			print("No usable cameras detected. Exiting. \nPlease connect your camera(s) and reboot the Raspberry Pi. ")
 			sys.exit(1)
 		elif len(usable_cameras) == 1:
 			print("One usable camera detected. Running single-camera mode.")
