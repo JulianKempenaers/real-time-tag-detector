@@ -6,7 +6,7 @@ This **real-time STag detector** (this repository) was developed as a tool to di
 This code keeps track of the n most recently detected tags and colour codes them. This means that even if a tag moves out of frame for a few seconds, it will still have the same colour when it returns.
 
 <p align="center">
-  <img src="https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/assets/STag-detector.gif?raw=true" width="500"/>
+  <img src="https://github.com/JulianKempenaers/real-time-tag-detector/blob/main/assets/STag-detector.gif?raw=true" width="700"/>
 </p>
 
 ### What are STags?
@@ -25,7 +25,7 @@ Instructions for first-time installation and use can be found [here](INSTRUCTION
 After running the installer, run the executable .sh file [(Run_Stag_Detection.sh)](Run_Stag_Detection.sh) to open the Graphical User Interface (GUI)
 
 <p align="center">
-  <img src="assets/GUI.png" style="max-width: 100%; height: auto;" />
+  <img src="assets/GUI.png" style="max-width: 60%; height: auto;" />
 </p>
 
 ### Settings
