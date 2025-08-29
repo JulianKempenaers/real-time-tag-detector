@@ -54,19 +54,19 @@ from STag_GUI import load_settings
 
 
 def launch_settings_gui():
-	root = ttk.Window(themename="solar")  # or try other themes like "darkly", "cyborg", "minty"
+	root = ttk.Window(themename="solar")
 	app = STag_GUI(root)
 	root.mainloop()
 	return app.started
 
-# Run the GUI
+# Run the GUI and check if 'start' was pressed
 if not launch_settings_gui(): #because launch_settings_gui returns False if 'start' wasn't pressed
 	print("User closed the GUI without pressing Start. Exiting.")
-	sys.exit(0)  # Clean exit
+	sys.exit(0)  # clean exit
 
-# After it closes, load settings and continue
-settings = load_settings()  # assuming you import this too from STag_GUI
-
+# After GUI closes (because 'start' was pressed'), load settings and continue
+settings = load_settings()
+#get variables from settings 
 stag_libraries = settings["stag_libraries"]
 normalise_view = settings["normalise_view"]
 SHUTTERUS = settings["SHUTTERUS"]
@@ -186,14 +186,14 @@ def runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoo
 		
 		#create recentID text bar
 		if colour_coding:
-			text_bar = add_recentID_bar(recentIDs, combined)
+			text_bar = add_recentID_bar(recentIDs, combined, 'dual')
 			combined = np.vstack((combined, text_bar))
 
 		# Display
 		cv2.namedWindow('Dual Camera Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN)
 		cv2.setWindowProperty('Dual Camera Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-		cv2.putText(combined, "Press ESC to exit", (20, 40),
-            cv2.FONT_HERSHEY_SIMPLEX, 2.0, (0, 0, 255), 3)
+		cv2.putText(combined, "Press ESC to exit", (20, 100),
+            cv2.FONT_HERSHEY_SIMPLEX, 4.0, (0, 0, 255), 7)
 		cv2.imshow('Dual Camera Live Stream - PRESS ESC TO EXIT', combined)
 		if save_video:
 			frame_to_write = pad_to_size(combined, WIDTH, HEIGHT)
@@ -251,13 +251,13 @@ def runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom):
 		
 		#create recentID text bar
 		if colour_coding:
-			text_bar = add_recentID_bar(recentIDs, resized_render)
+			text_bar = add_recentID_bar(recentIDs, resized_render, 'single')
 			resized_render = np.vstack((resized_render, text_bar))
 		
 		cv2.namedWindow('Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN) #create livestream window
 		cv2.setWindowProperty('Live Stream - PRESS ESC TO EXIT', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN) #set the window fullscreen
-		cv2.putText(resized_render, "Press ESC to exit", (20, 50),
-            cv2.FONT_HERSHEY_SIMPLEX, 2.0, (0, 0, 255), 3)
+		cv2.putText(resized_render, "Press ESC to exit", (20, 100),
+            cv2.FONT_HERSHEY_SIMPLEX, 4.0, (0, 0, 255), 7)
 		cv2.imshow('Live Stream - PRESS ESC TO EXIT', resized_render)		
 		if save_video:
 			frame_to_write = pad_to_size(resized_render, WIDTH, HEIGHT)
@@ -361,25 +361,52 @@ def apply_overlay(img, render, corners, ids, recentIDs):
 	return render
 
 
-def add_recentID_bar(recentIDs, combined):
-	bar_height = 200
-	text_bar = np.ones((bar_height, combined.shape[1], 3), dtype=np.uint8) * 255  # white background
+def add_recentID_bar(recentIDs, combined_image, cameramode):
+	#sort by marker ID so that the bar doesn't re-order every frame (flickering was very difficult to read)
+	recentIDs=sorted(recentIDs, key=lambda x: x[0])
+	max_per_row = 8 #to not overcrowd the rows
+	num_ids = len(recentIDs)
+	num_rows = (num_ids + max_per_row - 1) // max_per_row # ceiling division
+	
+	box_margin = 10
+	text_thickness = 2
 	font = cv2.FONT_HERSHEY_SIMPLEX
-	font_scale = 5
-	thickness = 4
-	x = 10  # Starting X position
-	y = 180  # Y position (baseline of text)
-
-	for marker_id, color in recentIDs:
+	if cameramode == 'single':
+		box_height = 60
+		font_scale = 1.2
+		bar_height = 210
+	elif cameramode == 'dual':
+		box_height = 100
+		font_scale = 2.4
+		bar_height = 330
+	else:
+		box_height = 60
+		font_scale = 1.2
+		bar_height = 210
+	
+	
+	img_width = combined_image.shape[1]
+	bar = np.ones((bar_height, img_width, 3), dtype=np.uint8) * 255 #white background
+	
+	for idx, (marker_id, color) in enumerate(recentIDs):
+		row = idx // max_per_row
+		col = idx % max_per_row
+		
+		box_width = img_width // max_per_row
+		x1 = col * box_width
+		y1 = row * (box_height + box_margin)
+		x2 = x1 + box_width
+		y2 = y1 + box_height
+		
+		cv2.rectangle(bar, (x1, y1), (x2, y2), color, -1)
+		
 		text = str(marker_id)
-
-		# Draw text
-		cv2.putText(text_bar, text, (x, y), font, font_scale, color, thickness, cv2.LINE_AA)
-
-		# Estimate text size and advance x position
-		(text_width, _), _ = cv2.getTextSize(text, font, font_scale, thickness)
-		x += text_width + 20  # Add some spacing after each ID
-	return text_bar
+		text_size,_ = cv2.getTextSize(text, font, font_scale, text_thickness)
+		text_x = x1 + (box_width - text_size[0]) // 2
+		text_y = y1 + (box_height + text_size[1]) // 2
+		
+		cv2.putText(bar, text, (text_x, text_y), font, font_scale, (255, 255, 255), text_thickness, cv2.LINE_AA)
+	return bar
 	
 def pad_to_size(image, target_width, target_height, pad_color=(0, 0, 0)):
 	img_h, img_w = image.shape[:2]
