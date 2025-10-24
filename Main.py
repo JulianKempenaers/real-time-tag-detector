@@ -56,6 +56,7 @@ from STag_GUI import load_settings
 def launch_settings_gui():
 	root = ttk.Window(themename="solar")
 	app = STag_GUI(root)
+	
 	root.mainloop()
 	return app.started
 
@@ -102,13 +103,53 @@ colour_palette = [
 	(0, 204, 153),    # turquoise
 	(153, 51, 255)    # amethyst
 ]
+
+falsely_detected_ids =  [
+	17040,
+	17055,
+	17019,
+	17024,
+	17105,
+	17064,
+	17010,
+	17094,
+	17120,
+	17004,
+	17014,
+	17034,
+	17026,
+	17076,
+	17103,
+	17051,
+	17147,
+	17119,
+	17131,
+	17078,
+	19005,
+	19036,
+	19012,
+	19018,
+	19022,
+	19000,
+	19009,
+	19015,
+	19031,
+	19023,
+	21009,
+	21011,
+	23005
+	]
+#print(falsely_detected_ids)
+remove_ids = np.array(falsely_detected_ids)
+#print(remove_ids)
 def camera_capture_loop(picam2, output_holder, width, height, display_width, display_height, crop_x, crop_y):
 	while True:
 		yuv = picam2.capture_array("main")
 		grey = yuv[crop_y:crop_y + display_height, crop_x:crop_x + display_width] #cropping the image to the display height/width
+		grey = grey[::-1, ::-1] #rotate camera 180 degrees to match real-life view
 		output_holder[0] = grey
 
-def runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoom):
+def runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoom, remove_ids):
 	WIDTH = 1014*input_resolution_factor
 	HEIGHT = 760*input_resolution_factor
 	display_width = int(WIDTH/output_zoom)
@@ -166,7 +207,7 @@ def runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoo
 		# Process first frame
 		with recentIDs_lock:
 			img1, render1, corners1, ids1, recentIDs, available_colours = detect_markers_and_assign_colours(
-			grey1, recentIDs, available_colours, display_width, display_height)
+			grey1, recentIDs, available_colours, display_width, display_height, remove_ids)
 
 		render1 = apply_overlay(img1, render1, corners1, ids1, recentIDs)
 		resized1 = cv2.resize(render1, (int(WIDTH*4/input_resolution_factor), int(HEIGHT*4/input_resolution_factor)), interpolation=cv2.INTER_NEAREST)
@@ -175,7 +216,7 @@ def runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoo
 		# Process second frame
 		with recentIDs_lock:
 			img2, render2, corners2, ids2, recentIDs, available_colours = detect_markers_and_assign_colours(
-			grey2, recentIDs, available_colours, display_width, display_height)
+			grey2, recentIDs, available_colours, display_width, display_height, remove_ids)
 
 		render2 = apply_overlay(img2, render2, corners2, ids2, recentIDs)
 		resized2 = cv2.resize(render2, (int(WIDTH*4/input_resolution_factor), int(HEIGHT*4/input_resolution_factor)), interpolation=cv2.INTER_NEAREST)
@@ -209,7 +250,7 @@ def runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoo
 	
 
 	
-def runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom):
+def runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom, remove_ids):
 	"""
 	Run the camera acquisition loop and process frames with overlay.
 	"""
@@ -244,9 +285,10 @@ def runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom):
 		#capture a new frame
 		yuv = picam2.capture_array("main")
 		grey = yuv[crop_y:crop_y + display_height, crop_x:crop_x + display_width] #cropping the image to the display height/width
+		grey = grey[::-1, ::-1] #rotate camera 180 degrees to match real-life view
 
-		img, render, corners, ids, recentIDs, available_colours = detect_markers_and_assign_colours(grey, recentIDs, available_colours, display_width, display_height)
-		render = apply_overlay(img, render, corners, ids, recentIDs)				
+		img, render, corners, ids, recentIDs, available_colours = detect_markers_and_assign_colours(grey, recentIDs, available_colours, display_width, display_height, remove_ids)
+		render = apply_overlay(img, render, corners, ids, recentIDs, remove_ids)				
 		resized_render = cv2.resize(render, (int(WIDTH*4/input_resolution_factor), int(HEIGHT*4/input_resolution_factor)), interpolation=cv2.INTER_NEAREST)
 		
 		#create recentID text bar
@@ -276,7 +318,7 @@ def runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom):
 	
 
 	
-def detect_markers_and_assign_colours(grey, recentIDs, available_colours, display_width, display_height):
+def detect_markers_and_assign_colours(grey, recentIDs, available_colours, display_width, display_height, remove_ids):
 	if normalise_view:
 		# normalize to 0-255 and convert to uint8
 		grey_8bit = cv2.convertScaleAbs(grey, alpha=(255.0 / grey.max()))
@@ -292,8 +334,18 @@ def detect_markers_and_assign_colours(grey, recentIDs, available_colours, displa
 	new_ids = []
 	for k, libraryHD in enumerate(stag_libraries): #iterate over the desired stag libraries
 		(corners, ids, rejected_corners) = stag.detectMarkers(img, libraryHD) 
+		ids = (libraryHD)*1000+ids
+		#find indices of ids for overlapping tags
+		ids_scalar = np.array([int(i[0]) for i in ids])
+		keep_mask = ~np.isin(ids_scalar, remove_ids)
+		#if any, remove ids at those indices
+		#and remove the corners at those indices too
+		ids = ids[keep_mask]
+		corners = np.array(corners)[keep_mask]
 		frame_corners.extend(corners)
-		frame_ids.extend((libraryHD)*1000+ids) #create a unique marker (combination of library & tag id
+		frame_ids.extend(ids)
+		#frame_ids.extend((libraryHD)*1000+ids) #create a unique marker (combination of library & tag id
+		#print(f'frame_ids {frame_ids}')
 	if colour_coding:
 		for marker_id in frame_ids: #first check for presence of each marker in the recentIDs list
 			found = False
@@ -349,15 +401,15 @@ def apply_overlay(img, render, corners, ids, recentIDs):
 		height, width = render.shape[:2]
 		#check if the text falls within image bounds
 		
-		if center_x-75 < 0 :
+		if center_x-85 < 0 :
 			text_x = center_x+30
 		else:
-			text_x = center_x-75
-		if center_y-35 < 0 :
+			text_x = center_x-85
+		if center_y-45 < 0 :
 			text_y = center_y+50
 		else:
-			text_y = center_y -20
-		cv2.putText(render, str(marker_id[0]), (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5*(input_resolution_factor/output_zoom), color, int(round(1*(input_resolution_factor/output_zoom))))	
+			text_y = center_y -30
+		cv2.putText(render, str(marker_id[0]), (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 1*(input_resolution_factor/output_zoom), color, int(round(2*(input_resolution_factor/output_zoom))))	
 	return render
 
 
@@ -369,17 +421,18 @@ def add_recentID_bar(recentIDs, combined_image, cameramode):
 	num_rows = (num_ids + max_per_row - 1) // max_per_row # ceiling division
 	
 	box_margin = 10
-	text_thickness = 2
+	text_thickness = 7
 	font = cv2.FONT_HERSHEY_SIMPLEX
 	if cameramode == 'single':
-		box_height = 60
-		font_scale = 1.2
-		bar_height = 210
+		box_height = 120
+		font_scale = 3
+		bar_height = 390
 	elif cameramode == 'dual':
-		box_height = 100
-		font_scale = 2.4
-		bar_height = 330
+		box_height = 200
+		font_scale = 6
+		bar_height = 630
 	else:
+		print("no camera mode detected")
 		box_height = 60
 		font_scale = 1.2
 		bar_height = 210
@@ -463,10 +516,10 @@ if __name__ == '__main__':
 			sys.exit(1)
 		elif len(usable_cameras) == 1:
 			print("One usable camera detected. Running single-camera mode.")
-			runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom)
+			runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom, remove_ids)
 		elif len(usable_cameras) >= 2:
 			print("Two usable cameras detected. Running dual-camera mode.")
-			runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoom)
+			runCameraAcquisitionDual(colour_palette, input_resolution_factor, output_zoom, remove_ids)
 
 	except Exception:
 		print("Unhandled exception occurred:")
