@@ -288,7 +288,7 @@ def runCameraAcquisition(colour_palette, input_resolution_factor, output_zoom, r
 		grey = grey[::-1, ::-1] #rotate camera 180 degrees to match real-life view
 
 		img, render, corners, ids, recentIDs, available_colours = detect_markers_and_assign_colours(grey, recentIDs, available_colours, display_width, display_height, remove_ids)
-		render = apply_overlay(img, render, corners, ids, recentIDs, remove_ids)				
+		render = apply_overlay(img, render, corners, ids, recentIDs)				
 		resized_render = cv2.resize(render, (int(WIDTH*4/input_resolution_factor), int(HEIGHT*4/input_resolution_factor)), interpolation=cv2.INTER_NEAREST)
 		
 		#create recentID text bar
